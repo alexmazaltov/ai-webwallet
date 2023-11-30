@@ -1,0 +1,90 @@
+body {
+    padding-top: 12rem; /* Adjusted for the fixed navbar */
+    background: url("../assets/ai-cover-vc.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-y: 60px;
+}
+
+@media (min-width: 100px) {
+    body {
+        padding-top: 6rem; /* Adjust as needed */
+    }
+}
+
+@media (min-width: 300px) {
+    body {
+        padding-top: 8rem; /* Adjust as needed */
+    }
+}
+
+@media (min-width: 500px) {
+    body {
+        padding-top: 10rem; /* Adjust as needed */
+    }
+}
+
+@media (min-width: 768px) {
+    body {
+        padding-top: 12rem; /* Adjust as needed */
+    }
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-top: 14rem; /* Adjust as needed */
+    }
+}
+
+.navbar > .container {
+    z-index: 1000;
+}
+
+.gen-seed-btn-wrapper {
+    z-index: 999;
+}
+
+.nav-item {
+    padding-left: 20px; /* Adjust as needed for spacing between icon and text */
+    padding-right: 10px;
+    background-size: 20px; /* Adjust as needed for the size of your icons */
+    background-repeat: no-repeat;
+    background-position: left center; /* Adjust as needed for the positioning of your icons */
+    background-origin: padding-box; /* Adjust the background-origin */
+}
+
+.nav-link {
+    display: inline-block;
+    padding-left: 30px; /* Adjust as needed for spacing between icon and text */
+}
+
+/* Replace the URLs with the actual paths to your images */
+.nav-item.nav-eth {
+    background-image: url('../assets/eth-logo.svg');
+}
+
+.nav-item.nav-erc20 {
+    background-image: url('../assets/eth-logo.svg');
+}
+
+.nav-item.nav-btc {
+    background-image: url('../assets/btc.png');
+}
+
+.nav-item.nav-ltc {
+    background-image: url('../assets/ltc.webp');
+}
+
+.nav-item.nav-bnb {
+    background-image: url('../assets/bnb.png');
+}
+
+.nav-item.nav-dot {
+    background-image: url('../assets/dot.jpg');
+}
+
+.gen-seed-btn-wrapper {
+    margin-top: 4rem;
+    margin-right: 1rem;
+}
+
