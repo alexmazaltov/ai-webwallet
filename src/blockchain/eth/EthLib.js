@@ -1,9 +1,7 @@
 //let PROVIDER_URL = process.env.ETH_PROVIDER_URL;
-// TODO:
-//      * Create api endpoint on my server alefinvest.xyz to retrieve sensetive information
-//      * It should be secure endpoint with auth endpoint.
 // this.infuraApiKey = process.env.INFURA_API_KEY;
-const INFURA_API_KEY = 'ff1a4d33dfe64055b03d770d91788f61';
+// const INFURA_API_KEY = 'ff1a4d33dfe64055b03d770d91788f61';
+const INFURA_API_KEY = process.env.INFURA_API_KEY;
 const PROVIDER_URL = `https://sepolia.infura.io/v3/${INFURA_API_KEY}`;
 const DEFAULT_ADDRESS = "0xACfC44f9AC805aB09B92656b299fFAFFD2439177";
 let GWEI = 10**9;

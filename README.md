@@ -1,4 +1,4 @@
-# TODOs
+# History
 1. Initialise git repository
 2. Configure `.gitignore` file to prevent sensitive information going to public
 3. Generate npm project
