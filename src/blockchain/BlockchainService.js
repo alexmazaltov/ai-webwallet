@@ -47,11 +47,14 @@ class BlockchainService {
       this.balance = balance;
     }
 
-    sendCurrency(){
+    async sendCurrency(){
       let _address = document.getElementById('recipientAddress').value;
       let _amount = document.getElementById('amount').value;
       let currency = this.app.getCurrency();
-      alert(`Sending ${_amount} ${currency} to ${_address}`);
+      // alert(`Sending ${_amount} ${currency} to ${_address}`);
+      let hash = await this.getCurrencyLibrary().sendCurrency(_address, _amount);
+      console.log('Transaction hash:', hash);
+      alert(hash);
     }    
 }
 

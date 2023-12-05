@@ -1,5 +1,6 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = {
     entry: './src/index.js', // assuming your main entry file is index.js
@@ -18,5 +19,6 @@ module.exports = {
     },
     plugins: [
         new Dotenv(), // loads environment variables from .env file
+        new NodePolyfillPlugin()
     ],
 };
