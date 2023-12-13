@@ -1,13 +1,15 @@
 const EthLib = require('./eth/EthLib');
+const Erc20Lib = require("./erc20/Erc20Lib");
 
 class BlockchainService {
 
     constructor(app) {
         this.app = app;
         let eth = new(EthLib);
+        let erc20 = new(Erc20Lib);
         this.currencyLibraries = {
             ETH: eth,
-            ERC20: eth,
+            ERC20: erc20,
             BTC: eth,
             LTC: eth,
             BNB: eth,

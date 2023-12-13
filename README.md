@@ -28,3 +28,7 @@
 3. `npm i node-polyfill-webpack-plugin` and adjust webpack.config.js accordingly to: https://stackoverflow.com/a/65556946
 4. Adjust `package.json` scripts: add `  "build": "webpack --config webpack.config.js --mode development --progress"` 
 5. Add ETH token support
+
+## v5-erc20
+
+1. Add ERC20 token support
