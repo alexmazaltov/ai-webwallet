@@ -32,3 +32,10 @@
 ## v5-erc20
 
 1. Add ERC20 token support
+
+## v6-btc-01
+
+1. Add btc support
+   * Get token for API ...
+   * Get btc address on ...
+   * Add btc library ...
