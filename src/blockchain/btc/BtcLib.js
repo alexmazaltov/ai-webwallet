@@ -1,6 +1,7 @@
-//const {ECPair,TransactionBuilder,networks} = require('bitcoinjs-lib');
+const {ECPair, TransactionBuilder, networks} = require('bitcoinjs-lib');
 
 const PRIVATE_KEY = process.env.BTC_PRIVATE_KEY;
+const WIF = process.env.BTC_WIF;
 const ADDRESS = process.env.BTC_ADDRESS;
 const AbstractCurrencyLib = require('/src/blockchain/AbstractCurrencyLib')
 
@@ -15,7 +16,7 @@ class BtcLib extends AbstractCurrencyLib {
         let converter = new BtcConverter();
         console.log('BtcLib -> constructor() app: ', app);
         let provider = new BlockcypherProvider(app,validator,converter);
-        super(app,provider,validator,converter);
+        super(app, provider, validator, converter);
     }
 
     getNetwork(){
@@ -26,6 +27,16 @@ class BtcLib extends AbstractCurrencyLib {
         return new Promise(async(resolve,reject)=>{
             try{
                 return resolve(PRIVATE_KEY);
+            }catch (e){
+                return reject(e);
+            }
+        })
+    }
+
+    getWif(){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                return resolve(WIF);
             }catch (e){
                 return reject(e);
             }
@@ -55,73 +66,80 @@ class BtcLib extends AbstractCurrencyLib {
         })
     }
 
-    // sendCurrency(to,amount){
-    //     return new Promise(async(resolve,reject)=>{
-    //         try{
-    //             let txParams = await this._formatTransactionParameters(to,amount)
-    //             let rawTx = await this._createSignRawTx(txParams);
-    //             let txHash = await this.provider.sendTx(rawTx);
-    //             return resolve(txHash);
-    //         }catch (e) {
-    //             return reject(e)
-    //         }
-    //     })
-    // }
+    sendCurrency(to,amount){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let txParams = await this._formatTransactionParameters(to,amount);
+                let currentBalance = await this.getBalance(await this.getAddress());
+                // console.log('txParams["amount"]+txParams["fee"]: ', txParams["amount"],txParams["fee"]);
+                // console.log('currentBalance: ', Math.round(this.fromDecimals(currentBalance)));
+                if (txParams["amount"]+txParams["fee"] > this.fromDecimals(currentBalance)) {
+                    throw('Your balance is less then amount + fee. Can\'t proceed');
+                }
+                let rawTx = await this._createSignRawTx(txParams);
+                let txHash = await this.provider.sendTx(rawTx);
+                return resolve(txHash);
+            }catch (e) {
+                return reject(e)
+            }
+        })
+    }
 
-    // _createSignRawTx(txParams){
-    //     return new Promise(async(resolve,reject)=>{
-    //         try {
-    //             let privKey = await this.getPrivateKey();
-    //             let keyring = await ECPair.fromWIF(privKey,this.getNetwork());
-    //             let txb = new TransactionBuilder(this.getNetwork());
-    //             txb = await this.provider.addSignedUtxos(keyring,txb,txParams["from"],txParams["to"],txParams["amount"],txParams["fee"]);
-    //             let txHash = txb.build().toHex();
-    //             this.validator.validateString(txHash,'txHash');
-    //             return resolve(txHash)
-    //         }catch (e){
-    //             return reject(e);
-    //         }
-    //     })
-    // }
-
-
-    // _formatTransactionParameters(to,amount){
-    //     return new Promise(async(resolve,reject)=>{
-    //         try{
-    //             let from = await this.getAddress();
-    //             let fee = await this.getFee();
-    //             amount = parseFloat(amount);
-    //             this.validator.validateAddress(to);
-    //             this.validator.validateNumber(amount);
-    //             this.validator.validateNumber(fee);
-    //             amount = this.fromDecimals(amount);
-    //             fee = this.fromDecimals(fee);
-    //             amount = Math.round(amount);
-    //             fee = Math.round(fee);
-    //             let txParams={
-    //                 from:from,
-    //                 to:to,
-    //                 amount:amount,
-    //                 fee:fee
-    //             }
-    //             return resolve(txParams);
-    //         }catch (e){
-    //             return reject(e);
-    //         }
-    //     })
-    // }
+    _createSignRawTx(txParams){
+        return new Promise(async(resolve,reject)=>{
+            try {
+                let privKey = await this.getPrivateKey();
+                let wif = await this.getWif();
+                let keyring = await ECPair.fromWIF(wif,this.getNetwork());
+                let txb = new TransactionBuilder(this.getNetwork());
+                txb = await this.provider.addSignedUtxos(keyring,txb,txParams["from"],txParams["to"],txParams["amount"],txParams["fee"]);
+                let txHash = txb.build().toHex();
+                this.validator.validateString(txHash,'txHash');
+                return resolve(txHash)
+            }catch (e){
+                return reject(e);
+            }
+        })
+    }
 
 
-    // getFee(){
-    //     return new Promise(async(resolve,reject)=>{
-    //         try{
-    //             let fee = await this.provider.getFee()
-    //             return resolve(fee);
-    //         }catch(e){
-    //             return reject(e)
-    //         }
-    //     })
-    // }
+    _formatTransactionParameters(to,amount){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let from = await this.getAddress();
+                let fee = await this.getFee();
+                amount = parseFloat(amount);
+                this.validator.validateAddress(to);
+                this.validator.validateNumber(amount);
+                this.validator.validateNumber(fee);
+                amount = this.fromDecimals(amount);
+                fee = this.fromDecimals(fee);
+                amount = Math.round(amount);
+                fee = Math.round(fee);
+                let txParams={
+                    from:from,
+                    to:to,
+                    amount:amount,
+                    fee:fee
+                }
+                return resolve(txParams);
+            }catch (e){
+                return reject(e);
+            }
+        })
+    }
+
+
+    getFee(){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let fee = await this.provider.getFee()
+                return resolve(fee);
+            }catch(e){
+                return reject(e)
+            }
+        })
+    }
 
 }
 

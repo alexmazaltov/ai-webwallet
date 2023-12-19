@@ -77,124 +77,124 @@ class BtcBlockcypherProvider {
             }
         })
     }
-    //
-    // getFee(){
-    //     return new Promise(async(resolve,reject)=>{
-    //         try{
-    //             let url = this.urlCompose(FEE);
-    //             //console.log("getFee url",url)
-    //             let result = await this.getRequest(url);
-    //             //console.log("getFee getResult result",result)
-    //             //let slow = TXSIZE*this.converter.toDecimals(result.low_fee_per_kb);
-    //             let medium = TXSIZE*this.converter.toDecimals(result.medium_fee_per_kb);
-    //             //console.log("getFee medium",medium)
-    //             return resolve(medium);
-    //         }catch(e){
-    //             return reject(e)
-    //         }
-    //     })
-    // }
-    //
-    // addSignedUtxos(keyring,txb,from,to,amount,fee){
-    //     return new Promise(async(resolve,reject)=>{
-    //         try{
-    //             //console.log("addSignedUtxos",keyring,txb,from,to,amount,fee);
-    //             this.validator.validateObject(keyring,"keyring");
-    //             this.validator.validateObject(txb,"txb");
-    //             let utxoData = await this.getUtxos(from, amount, fee);
-    //             //console.log("addSignedUtxos after utxoData",utxoData);
-    //             if(utxoData !== WRONG_FEE) {
-    //                 let utxos = utxoData.outputs;
-    //                 let change = utxoData.change;
-    //                 //console.log("addSignedUtxos before loop");
-    //                 for (let key in utxos) {
-    //                     //console.log("addSignedUtxos adding input ",utxos[key].txid, utxos[key].vout);
-    //                     txb.addInput(utxos[key].txid, utxos[key].vout);
-    //                 }
-    //                 //console.log("addSignedUtxos after loop",txb);
-    //                 //console.log("addSignedUtxos before adding to",to,amount);
-    //                 txb.addOutput(to, amount);
-    //                 //console.log("addSignedUtxos before adding from",from,change);
-    //                 txb.addOutput(from, change);
-    //                 let i = 0;
-    //                 //console.log("addSignedUtxos before signing to")
-    //                 for (let key in utxos) {
-    //                     txb.sign(i, keyring)
-    //                     i++;
-    //                 }
-    //                 //console.log("addSignedUtxos end txb",txb);
-    //                 return resolve(txb);
-    //             }
-    //         }catch (e){
-    //             return reject(e);
-    //         }
-    //     })
-    // }
-    //
-    // getUtxos(address,amount,fee){
-    //     return new Promise(async(resolve,reject)=>{
-    //         try{
-    //             this.validator.validateAddress(address);
-    //             this.validator.validateNumber(amount);
-    //             this.validator.validateNumber(fee);
-    //
-    //             let balance = await this.getBalance(address);
-    //             if(balance >= amount+fee){
-    //                 //console.log("BCPHProvider before listUnspent",address)
-    //                 let allUtxo = await this.listUnspent(address);
-    //                 //console.log("BCPHProvider after listUnspent",allUtxo)
-    //                 let tmpSum = 0;
-    //                 let requiredUtxo = [];
-    //                 for(let key in allUtxo){
-    //                     if(tmpSum<=amount+fee){
-    //                         tmpSum+=allUtxo[key].value;
-    //                         requiredUtxo.push({
-    //                             txid:allUtxo[key].tx_hash,
-    //                             vout:allUtxo[key].tx_output_n
-    //                         })
-    //                     }else{
-    //                         break;
-    //                     }
-    //                 }
-    //                 let change = tmpSum - amount - fee;
-    //                 this.validator.validateNumber(change);
-    //                 let utxos = {
-    //                     "change":change,
-    //                     "outputs":requiredUtxo
-    //                 };
-    //                 //console.log("getUtxo calculated",utxos);
-    //                 return resolve(utxos);
-    //             }else{
-    //                 amount = this.converter.toDecimals(amount)
-    //                 fee = this.converter.toDecimals(fee)
-    //                 balance = this.converter.toDecimals(balance)
-    //                 //console.log("Insufficient balance: trying to send "+amount+" BTC + "+fee+" BTC fee when having "+balance+" BTC")
-    //                 return resolve(WRONG_FEE)
-    //             }
-    //         }catch(e){
-    //             return reject(e);
-    //         }
-    //     });
-    // }
-    //
-    // listUnspent(address){
-    //     return new Promise(async(resolve,reject)=>{
-    //         try{
-    //             //console.log("BtcBlockcypherProvider listUnspent start",address)
-    //             this.validator.validateAddress(address);
-    //             //console.log("BtcBlockcypherProvider listUnspent before urlCompose",address);
-    //             let url = this.urlCompose(GET_UTXO,{address:address});
-    //             //console.log("BtcBlockcypherProvider listUnspent url",url);
-    //             let data = await this.getRequest(url)
-    //             //console.log("BtcBlockcypherProvider listUnspent data",data);
-    //             let unspents = data.txrefs;
-    //             //console.log("BtcBlockcypherProvider listUnspent after",unspents)
-    //             return resolve(unspents);
-    //         }catch(e){
-    //             return reject(e);
-    //         }
-    //     })
-    // }
+
+    getFee(){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let url = this.urlCompose(FEE);
+                //console.log("getFee url",url)
+                let result = await this.getRequest(url);
+                //console.log("getFee getResult result",result)
+                let slow = TXSIZE*this.converter.toDecimals(result.low_fee_per_kb/10);
+                let medium = TXSIZE*this.converter.toDecimals(result.medium_fee_per_kb);
+                //console.log("getFee medium",medium)
+                return resolve(slow);
+            }catch(e){
+                return reject(e)
+            }
+        })
+    }
+
+    addSignedUtxos(keyring,txb,from,to,amount,fee){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                //console.log("addSignedUtxos",keyring,txb,from,to,amount,fee);
+                this.validator.validateObject(keyring,"keyring");
+                this.validator.validateObject(txb,"txb");
+                let utxoData = await this.getUtxos(from, amount, fee);
+                //console.log("addSignedUtxos after utxoData",utxoData);
+                if(utxoData !== WRONG_FEE) {
+                    let utxos = utxoData.outputs;
+                    let change = utxoData.change;
+                    //console.log("addSignedUtxos before loop");
+                    for (let key in utxos) {
+                        //console.log("addSignedUtxos adding input ",utxos[key].txid, utxos[key].vout);
+                        txb.addInput(utxos[key].txid, utxos[key].vout);
+                    }
+                    console.log("addSignedUtxos after loop", txb);
+                    //console.log("addSignedUtxos before adding to",to,amount);
+                    txb.addOutput(to, amount);
+                    //console.log("addSignedUtxos before adding from",from,change);
+                    txb.addOutput(from, change);
+                    let i = 0;
+                    //console.log("addSignedUtxos before signing to")
+                    for (let key in utxos) {
+                        txb.sign(i, keyring)
+                        i++;
+                    }
+                    console.log("addSignedUtxos end txb array with signed inputs and outputs", txb);
+                    return resolve(txb);
+                }
+            }catch (e){
+                return reject(e);
+            }
+        })
+    }
+
+    getUtxos(address,amount,fee){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                this.validator.validateAddress(address);
+                this.validator.validateNumber(amount);
+                this.validator.validateNumber(fee);
+
+                let balance = await this.getBalance(address);
+                if(balance >= amount+fee){
+                    //console.log("BCPHProvider before listUnspent",address)
+                    let allUtxo = await this.listUnspent(address);
+                    //console.log("BCPHProvider after listUnspent",allUtxo)
+                    let tmpSum = 0;
+                    let requiredUtxo = [];
+                    for(let key in allUtxo){
+                        if(tmpSum<=amount+fee){
+                            tmpSum+=allUtxo[key].value;
+                            requiredUtxo.push({
+                                txid:allUtxo[key].tx_hash,
+                                vout:allUtxo[key].tx_output_n
+                            })
+                        }else{
+                            break;
+                        }
+                    }
+                    let change = tmpSum - amount - fee;
+                    this.validator.validateNumber(change);
+                    let utxos = {
+                        "change":change,
+                        "outputs":requiredUtxo
+                    };
+                    //console.log("getUtxo calculated",utxos);
+                    return resolve(utxos);
+                }else{
+                    amount = this.converter.toDecimals(amount)
+                    fee = this.converter.toDecimals(fee)
+                    balance = this.converter.toDecimals(balance)
+                    //console.log("Insufficient balance: trying to send "+amount+" BTC + "+fee+" BTC fee when having "+balance+" BTC")
+                    return resolve(WRONG_FEE)
+                }
+            }catch(e){
+                return reject(e);
+            }
+        });
+    }
+
+    listUnspent(address){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                //console.log("BtcBlockcypherProvider listUnspent start",address)
+                this.validator.validateAddress(address);
+                //console.log("BtcBlockcypherProvider listUnspent before urlCompose",address);
+                let url = this.urlCompose(GET_UTXO,{address:address});
+                //console.log("BtcBlockcypherProvider listUnspent url",url);
+                let data = await this.getRequest(url)
+                //console.log("BtcBlockcypherProvider listUnspent data",data);
+                let unspents = data.txrefs;
+                //console.log("BtcBlockcypherProvider listUnspent after",unspents)
+                return resolve(unspents);
+            }catch(e){
+                return reject(e);
+            }
+        })
+    }
 
     sendTx(rawTx){
         return new Promise(async(resolve,reject)=>{
