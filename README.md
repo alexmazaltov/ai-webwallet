@@ -46,3 +46,10 @@
      * BLOCKCYPHER_PROVIDER_TOKEN
    * add npm dep 'wallet-address-validator', 'bitcoinjs-lib'
    * Add btc library ...
+
+# v7-btc-02
+
+1. Add functionality to perform transactions to send btc
+   * Generate new BTC keys for testnet with WIF `curl -X POST http://api.blockcypher.com/v1/btc/test3/addrs?bech32=1`
+   * Update .env
+2. Install npm package `npm install bitcoinjs-lib@5.1.3`

@@ -7,10 +7,18 @@ class WalletUI {
     }
 
     prepareUI(){
-        this.renderer.renderUI();
-        this.listenerManager.setListeners();
+        console.log('prepare UI');
+        this.renderUI();
+        this.setListeners();
     }
 
+    renderUI() {
+        this.getRenderer().renderUI();
+    }
+
+    setListeners() {
+        this.getListenerManager().setListeners();
+    }
     getListenerManager(){
         return this.listenerManager;
     }
