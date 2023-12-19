@@ -36,6 +36,13 @@
 ## v6-btc-01
 
 1. Add btc support
-   * Get token for API ...
-   * Get btc address on ...
+   * Get token for API https://accounts.blockcypher.com/tokens
+   * Get btc **BIP84** in **Bitcoin testnet** address on https://iancoleman.io/bip39/#english
+   * Add variables to .env file:
+     * BTC_ADDRESS
+     * BTC_PUBLIC_KEY
+     * BTC_PRIVATE_KEY
+     * BLOCKCYPHER_PROVIDER_URL='https://api.blockcypher.com/v1/'
+     * BLOCKCYPHER_PROVIDER_TOKEN
+   * add npm dep 'wallet-address-validator', 'bitcoinjs-lib'
    * Add btc library ...
