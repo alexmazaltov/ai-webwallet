@@ -1,13 +1,18 @@
+const NODE_ENV = process.env.NODE_ENV;
+console.log("NODE_ENV: " + NODE_ENV)
+
 const DEFAULT_CURRENCY = "ETH";
 
 const Renderer = require('./ui/Renderer');
 const ListenerManager = require('./ui/ListenerManager');
 const WalletUI = require('./ui/WalletUI');
+const HttpService = require("./services/HttpService");
 const BlockchainService = require('./blockchain/BlockchainService');
 
 class Application {
 
     constructor() {
+        this.httpService = new HttpService(this);
         let renderer = new Renderer(this);
         let listenerManager = new ListenerManager(this);
         let walletUI = new WalletUI(this, renderer, listenerManager);
@@ -15,8 +20,14 @@ class Application {
         let blockchainService = new BlockchainService(this);
         this.setBlockchainService(blockchainService);
         this.currency = DEFAULT_CURRENCY;
+        this.httpService = new HttpService(this);
     }
-    
+
+    isProduction(){
+        return NODE_ENV == "production";
+    }
+
+
     setWalletUI(walletUI) {
         this.walletUI = walletUI;
     }
