@@ -1,47 +1,41 @@
-const Web3 = require('web3');
+// відповідає за рендер елементів в додатку
 
-class Renderer {
+class Renderer{
 
     constructor(app) {
-        this.app = app;
+        this.app = app
     }
-    
-    renderUI() {
+    renderUI(){
         this.renderCurrency();
         this.renderBalance();
         this.renderAddress();
     }
-
-    renderCurrency() {
-        // console.log("Renderer->renderCurrency(): here");
+    renderCurrency(){
         let currency = this.app.getCurrency();
-        let elements = document.getElementsByClassName("currency-symbol");
-        for (let i = 0; i < elements.length; i++) {
-            elements[i].innerHTML = currency;
+        let elements = document.getElementsByClassName("currency_symbol");
+        //for loop
+        for(let i=0; i<elements.length;i++){
+            let element = elements[i];
+            element.innerHTML=currency;
         }
     }
 
     renderBalance(){
-        // console.log("Renderer->renderBalance(): here");
-        this.app.getBalance().then((balance) => {
+        this.app.getCurrentBalance().then((balance)=>{
             let element = document.getElementById("balance");
-            element.innerHTML = balance;
-        })
-        .catch(error => {
-            console.error(error)
-            // Display error message on the page
-            document.body.innerHTML += `<p>Error retrieving balance: ${error}</p>`;
+            element.innerHTML=balance;
+        }).catch((e)=>{
+            console.error(e);
         });
     }
 
-    renderAddress() {
-        this.app.getAddress().then((address) => {
+    renderAddress(){
+        this.app.getAddress().then((address)=>{
             let element = document.getElementById("address");
-            element.innerHTML = address;
-        })
-            .catch(error => {
-                console.error(error);
-            });
+            element.innerHTML=address;
+        }).catch((e)=>{
+            console.error(e);
+        });
     }
 }
 

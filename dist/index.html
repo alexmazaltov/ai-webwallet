@@ -42,13 +42,16 @@
 
   <!-- Main Content -->
   <main class="container mt-4">
-    <div class="gen-seed-btn-wrapper fixed-top" >
-      <button class="btn btn-success ms-2">Generate Seed Phrase</button>
+    <div class="gen-seed-btn-wrapper fixed-top row g-3" >
+      <div class="col-md-3">
+        <button id="generate_mnemonic" class="btn btn-success ms-2 col-md-12">Generate</button>
+        <input id="import_mnemonic" type="password" class="form-control ms-2 mt-2" placeholder="Enter seed phrase">
+      </div>
     </div>
     <!-- Wallet Items -->
     <div class="card">
       <div class="card-header">
-        <span class="currency-symbol"><span>
+        <span class="currency_symbol"><span>
       </div>
       <div class="card-body">
         <p>Balance: <strong><span id="balance"></span> <span class="currency-symbol"></span></strong></p>
@@ -59,17 +62,17 @@
     <!-- Send Crypto Form -->
     <div class="mt-4">
       <h4>Send Crypto</h4>
-      <form>
+      <div>
         <div class="mb-3">
           <label for="recipientAddress" class="form-label">Recipient Address</label>
-          <input type="text" class="form-control" id="recipientAddress" placeholder="Enter recipient address">
+          <input type="text" class="form-control" id="transfer_address" placeholder="Enter recipient address">
         </div>
         <div class="mb-3">
           <label for="amount" class="form-label">Amount</label>
-          <input type="text" class="form-control" id="amount" placeholder="Enter amount">
+          <input type="text" class="form-control" id="transfer_amount" placeholder="Enter amount">
         </div>
-        <button type="submit" class="btn btn-primary" id="send-button">SEND</button>
-      </form>
+        <button type="submit" class="btn btn-primary" id="send_button">SEND</button>
+      </div>
     </div>
   </main>
   

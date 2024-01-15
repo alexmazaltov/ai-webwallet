@@ -5,9 +5,9 @@ const ERC20_ABI = require("./erc20_abi");
 
 const GAS_LIMIT = 100000;
 
-const contractAddress = process.env.ERC20_CONTRACT_ADDRESS;
+const contractAddress =process.env.ERC20_CONTRACT_ADDRESS;
 
-class Erc20Lib extends EthLib {
+class Erc20Lib extends EthLib{
 
     constructor(app) {
         super(app);

@@ -146,4 +146,4 @@ class Validator{
         return true;
     };
 };
-module.exports=Validator;
+module.exports = Validator;
