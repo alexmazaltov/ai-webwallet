@@ -1,23 +1,24 @@
-class WalletUI {
-    
-    constructor(app, renderer, listenerManager) {
-        this.app =  app;
-        this.renderer = renderer;
+// відповідає за роботу рендерера та ListenerManager'a
+class WalletUI{
+
+    constructor(app,listenerManager,renderer){
+        this.app = app;
         this.listenerManager = listenerManager;
+        this.renderer = renderer;
     }
 
     prepareUI(){
-        console.log('prepare UI');
-        this.renderUI();
-        this.setListeners();
+        console.log("walletUi prepareUi")
+        this.renderUi();
+        this.setListeners()
     }
 
-    renderUI() {
+    renderUi(){
         this.getRenderer().renderUI();
     }
 
-    setListeners() {
-        this.getListenerManager().setListeners();
+    setListeners(){
+        this.getListenerManager().setListeners()
     }
     getListenerManager(){
         return this.listenerManager;

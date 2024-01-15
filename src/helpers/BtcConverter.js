@@ -1,5 +1,5 @@
 const Converter = require('./Converter');
-const DECIMALS= 8;
+const DECIMALS=8;
 class BtcConverter extends Converter{
     toDecimals(amount) {
         return super.toDecimals(amount, DECIMALS);

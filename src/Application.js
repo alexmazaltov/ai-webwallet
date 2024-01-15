@@ -1,90 +1,90 @@
 const NODE_ENV = process.env.NODE_ENV;
-console.log("NODE_ENV: " + NODE_ENV)
-
+console.log("NODE_ENV "+NODE_ENV)
 const DEFAULT_CURRENCY = "ETH";
-
-const Renderer = require('./ui/Renderer');
-const ListenerManager = require('./ui/ListenerManager');
-const WalletUI = require('./ui/WalletUI');
+const Renderer = require("./ui/Renderer");
+const ListenerManager = require("./ui/ListenerManager");
+const WalletUI = require("./ui/WalletUI");
 const HttpService = require("./services/HttpService");
 const BlockchainService = require('./blockchain/BlockchainService');
 
-class Application {
+class Application{
 
     constructor() {
+        this.currency = DEFAULT_CURRENCY;
         this.httpService = new HttpService(this);
         let renderer = new Renderer(this);
         let listenerManager = new ListenerManager(this);
-        let walletUI = new WalletUI(this, renderer, listenerManager);
-        this.setWalletUI(walletUI);
+        let walletUi = new WalletUI(this,listenerManager,renderer);
+        this.setWalletUI(walletUi);
         let blockchainService = new BlockchainService(this);
-        this.setBlockchainService(blockchainService);
-        this.currency = DEFAULT_CURRENCY;
-        this.httpService = new HttpService(this);
+        this.blockchainService = blockchainService;
     }
 
     isProduction(){
         return NODE_ENV == "production";
     }
 
-
-    setWalletUI(walletUI) {
-        this.walletUI = walletUI;
+    setWalletUI(walletUi){
+        this.walletUi = walletUi;
     }
 
-    getWalletUI() {
-        return this.walletUI;
+    getWalletUi(){
+        return this.walletUi;
     }
 
-    setBlockchainService(blockchainService){
-        this.blockchainService = blockchainService;
-    }
+    prepareUI(){
 
-    getBlockchainService(){
-        return this.blockchainService;
+        this.walletUi.prepareUI();
     }
-
-    getCurrency() {
+    getCurrency(){
         return this.currency;
-      }
-  
+    }
+
     changeCurrency(currency){
-        // console.log("App->changeCurrency(): here")
         this.setCurrency(currency);
-        this.getWalletUI().getRenderer().renderUI();
+        // changed prepareUI to renderUI to avoid duplicating listeners, only re-render
+        this.getWalletUi().renderUi();
     }
 
     setCurrency(currency){
         this.currency = currency;
     }
 
-    prepareUI(){
-        this.getWalletUI().prepareUI();
+    sendCurrency(receiver,amount){
+        return this.blockchainService.sendCurrency(receiver,amount);
     }
 
-    sendCurrency(){
-        return this.getBlockchainService().sendCurrency();
-    }
 
     getAddress(){
-        return new Promise(async (resolve, reject) => {
-            try {
-                let address = await this.getBlockchainService().getAddress();
-                return resolve(address);
-            } catch(error) {
-                console.error(error);
-                return reject(error)
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let result = await this.blockchainService.getAddress();
+                return resolve(result);
+            }catch (e){
+                console.error(e);
+                return reject(e);
             }
         })
-
     }
 
-    getBalance(){
-        return this.getBlockchainService().getBalance();
+    getCurrentBalance(){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let result = await this.blockchainService.getCurrentBalance();
+                return resolve(result);
+            }catch (e){
+                return reject(e);
+            }
+        })
     }
 
-    setBalance(new_balance) {
-        this.getBlockchainService().setBalance(new_balance);
+    generateMnemonic(){
+        return this.blockchainService.generateMnemonic();
+    }
+
+    importMnemonic(mnemonic){
+        this.blockchainService.importMnemonic(mnemonic);
+        this.walletUi.renderUi();
     }
 }
 

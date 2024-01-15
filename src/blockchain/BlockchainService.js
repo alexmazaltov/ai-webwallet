@@ -1,65 +1,90 @@
-const EthLib = require('./eth/EthLib');
+// відповідає за отримання балансу, за отримання адреси і за надсилання транзакцій
+const EthLib = require("./eth/EthLib");
 const Erc20Lib = require("./erc20/Erc20Lib");
 const BtcLib = require("./btc/BtcLib");
+const CredentialService = require("./credentials/CredentialService");
 
-class BlockchainService {
-
+class BlockchainService{
     constructor(app) {
-        this.app = app;
+        this.app = app
+        this.credentials = new CredentialService(app);
         let eth = new EthLib(app);
         let erc20 = new Erc20Lib(app);
         let btc = new BtcLib(app);
         this.currencyLibraries = {
-            ETH: eth,
-            ERC20: erc20,
-            BTC: btc,
-            LTC: eth,
-            BNB: eth,
-            DOT: eth
+            ETH:eth,
+            ERC20:erc20,
+            BTC:btc
         }
     }
-
-    getCurrencyLibrary() {
+    getCurrencyLibrary(){
         let currentCurrency = this.app.getCurrency();
         return this.currencyLibraries[currentCurrency];
     }
 
-    getAddress(){
-        return new Promise(async(resolve, reject) => {
-            try {
-                let address = this.getCurrencyLibrary().getAddress();
-                return resolve(address);
-            } catch(e) {
+    getCurrentBalance(){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let balance = await this.getCurrencyLibrary().getCurrentBalance();
+                return resolve(balance);
+            }catch (e){
                 return reject(e);
             }
-        });
+        })
     }
 
-    getBalance(){
-      return new Promise(async (resolve, reject) => {
-          try {
-              let address = await this.getAddress();
-              let balance = await this.getCurrencyLibrary().getBalance(address);
-              return resolve(balance);
-          } catch(e) {
-              reject(e);
-          }
-      })
+    getAddress(){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let address =await this.getCredentials().getAddress();
+                return resolve(address);
+            }catch (e){
+                return reject(e);
+            }
+        })
     }
 
-    setBalance(balance){
-      this.balance = balance;
+    getPrivateKey(){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let privKey =await this.getCredentials().getPrivateKey();
+                return resolve(privKey);
+            }catch (e){
+                return reject(e);
+            }
+        })
     }
 
-    async sendCurrency(){
-      let _address = document.getElementById('recipientAddress').value;
-      let _amount = document.getElementById('amount').value;
-      let currency = this.app.getCurrency();
-      // alert(`Sending ${_amount} ${currency} to ${_address}`);
-      let hash = await this.getCurrencyLibrary().sendCurrency(_address, _amount);
-      console.log('Transaction hash:', hash);
-      alert(hash);
-    }    
+    //
+    sendCurrency(receiver,amount){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let result = await this.getCurrencyLibrary().sendCurrency(receiver,amount);
+                return resolve(result);
+            }catch (e){
+                return reject(e);
+            }
+        })
+    }
+
+    getCredentials(){
+        return this.credentials;
+    }
+
+    generateMnemonic(){
+        return this.getCredentials().generateMnemonic();
+    }
+
+    importMnemonic(mnemonic){
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let result =await this.getCredentials().importMnemonic(mnemonic);
+                return resolve(result);
+            }catch (e){
+                return reject(e);
+            }
+        })
+    }
 }
 
 module.exports = BlockchainService;
